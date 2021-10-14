@@ -28,10 +28,21 @@ const html = `
 
   const update = () => {
     // WORKSHOP: HERE IS CODE TO FETCH ISS DATA
+    return fetch("https://api.wheretheiss.at/v1/satellites/25544").then(r => r.json()).then(data => {
+      lat = data.latitude;
+      lng = data.longitude;
+      alt = data.altitude * 1000; // km -> m
+      document.getElementById("lat").textContent = data.latitude;
+      document.getElementById("lon").textContent = data.longitude;
+      document.getElementById("alt").textContent = data.altitude;
+    }); 
   };
 
   const send = () => {
     // WORKSHOP: HERE IS CODE TO SEND DATA TO RE:EARTH
+    const send = () => {
+      parent.postMessage({ lat, lng, alt }, "*");
+    };
   };
 
   document.getElementById("update").addEventListener("click", update);
@@ -69,3 +80,15 @@ reearth.on("update", () => {
 });
 
 // WORKSHOP: HERE IS CODE TO MOVE CAMERA
+reearth.on("message", msg => {
+  reearth.visualizer.camera.flyTo({
+    lat: msg.lat,
+    lng: msg.lng,
+    height: msg.alt,
+    heading: 0,
+    pitch: -Math.PI/2,
+    roll: 0,
+  }, {
+    duration: 2
+  });
+});
