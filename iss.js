@@ -40,9 +40,7 @@ const html = `
 
   const send = () => {
     // WORKSHOP: HERE IS CODE TO SEND DATA TO RE:EARTH
-    const send = () => {
       parent.postMessage({ lat, lng, alt }, "*");
-    };
   };
 
   document.getElementById("update").addEventListener("click", update);
